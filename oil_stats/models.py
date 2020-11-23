@@ -3,17 +3,20 @@ import datetime as dt
 from django.db import models
 from django.db.models.deletion import CASCADE
 from gpa.models import Gpa
+from users.models import User
 
 
-class Storage(models.Model):  # склад масел или БПМ
+class Storage(models.Model):
     title = models.CharField('тип склада масел', max_length=50)
     number = models.CharField('станционный номер', max_length=10)
 
     def __str__(self):
         return f'{self.title} {self.number}'
 
-
-class Equip(models.Model):  # модель для выбора ГПА или БПМ
+# model for selecting equipment
+# this is an intermediate model for grouping two models
+# Gpa and Storage
+class Equip(models.Model):
     gpa = models.ForeignKey(
         Gpa,
         on_delete=CASCADE,
@@ -57,6 +60,7 @@ class Pump(models.Model):
         max_length=10,
         choices=OPERATION_CHOICES
     )
+    pump_date = models.DateField('дата перекачки', default=dt.date.today)
     source = models.ForeignKey(
         Tank,
         on_delete=CASCADE,
@@ -69,5 +73,10 @@ class Pump(models.Model):
         verbose_name='куда',
         related_name='target'
     )
-    pump_date = models.DateField('дата перекачки', default=dt.date.today)
     quantity = models.IntegerField('количество')
+    maker = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        related_name='pump_maker',
+        verbose_name='исполнитель'
+    )

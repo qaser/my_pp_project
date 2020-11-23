@@ -6,7 +6,7 @@ from .models import Equip, Pump, Storage, Tank
 class TankAdmin(admin.ModelAdmin):
     list_display = ('title', 'location', 'volume', 'level')
     search_fields = ('title', 'location',)
-    list_filter = ('location',)
+    list_filter = ('title', 'location',)
     empty_value_display = '-пусто-'
 
 
