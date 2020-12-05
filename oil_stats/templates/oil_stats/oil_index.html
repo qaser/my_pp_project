@@ -1,0 +1,50 @@
+{% extends "mysite/base.html" %}
+{% load static %}
+{% load render_table from django_tables2 %}
+
+{% block title %}Модуль учёта ГСМ{% endblock %}
+
+{% block style %}
+  <link href="{% static 'oil_stats/css/styles.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+  <div class="jumbotron">
+    <h1>Модуль учёта ГСМ</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <section class="content">
+    <div class="table-card">
+      <h3 class="table-title">
+        Последние операции по перекачке масла. 
+        <a href="{% url 'pump_site' %}"> Вся статистика</a>
+      </h3>
+      {% render_table pump_table %}
+    </div>
+
+    {% include "oil_stats/add_pump.html" with form=pump_form %}
+
+    <div class="table-card">
+      <h3 class="table-title">
+        Последние операции по замене фильтроэлементов. 
+        <a href="{% url 'pump_site' %}"> Вся статистика</a>
+      </h3>
+      {% render_table filter_table %}
+    </div>
+
+    {% include "oil_stats/add_filterchange.html" with form=filter_form %}
+  
+    <div class="table-card">
+      <h3 class="table-title">
+        Последние данные по расходу масла. 
+        <a href="{% url 'pump_site' %}"> Вся статистика</a>
+      </h3>
+      {% render_table util_table %}
+    </div>
+
+    {% include "oil_stats/add_util.html" with form=util_form %}
+
+  </section>
+{% endblock %}

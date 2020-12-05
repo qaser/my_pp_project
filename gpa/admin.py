@@ -18,9 +18,9 @@ class CompressorAdmin(admin.ModelAdmin):
 
 
 class GpaAdmin(admin.ModelAdmin):
-    list_display = ('title', 'name', 'engine', 'compressor')
+    list_display = ('title', 'name', 'engine', 'compressor', 'status')
     search_fields = ('title',)
-    list_filter = ('name',)
+    list_filter = ('name', 'status')
     empty_value_display = '-пусто-'
 
 

@@ -1,0 +1,22 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{% block title %}{% endblock %} | MySite</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}">
+    {% block style %}{% endblock %}
+
+  </head>
+
+  <body>
+    {% include 'mysite/base_ext/nav.html' %}
+    {% block header %}{% endblock %}
+    {% block content %}{% endblock %}
+    {% include 'mysite/base_ext/footer.html' %}
+  </body>
+  <script type="text/javascript" src={% static "oil_stats/js/script.js" %}></script>
+</html>

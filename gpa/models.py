@@ -27,28 +27,39 @@ class Compressor(models.Model):
 
 
 class Gpa(models.Model):
+    STATUS_CHOICES = (
+        ('work', 'Работа'),
+        ('reserve', 'Резерв'),
+        ('repair', 'Ремонт')
+    )
     title = models.IntegerField('станционный номер ГПА')
     name = models.CharField('тип ГПА', max_length=50)
     engine = models.ForeignKey(
         Engine,
         on_delete=CASCADE,
         verbose_name='тип силовой установки',
-        related_name= 'engine',
+        related_name='engine',
     )
     compressor = models.ForeignKey(
         Compressor,
         on_delete=CASCADE,
         verbose_name='тип нагнетателя',
-        related_name= 'compressor',
+        related_name='compressor',
     )
     life_time = models.IntegerField('наработка с начала эксплуатации')
     kr_time = models.IntegerField('наработка после кап. ремонта')
     sr_time = models.IntegerField('наработка после среднего ремонта')
+    status = models.TextField('состояние', choices=STATUS_CHOICES)
+
+
+    class Meta:
+        verbose_name_plural = 'gpa'
+        ordering = ('title',)
 
     def __str__(self):
         return f'ГПА {self.title}'
 
-
+    
 class Flaw(models.Model):
     gpa = models.ForeignKey(
         Gpa,

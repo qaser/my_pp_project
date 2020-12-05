@@ -13,7 +13,8 @@ class Storage(models.Model):
     def __str__(self):
         return f'{self.title} {self.number}'
 
-# model for selecting equipment
+
+# model for selecting equipment.
 # this is an intermediate model for grouping two models
 # Gpa and Storage
 class Equip(models.Model):
@@ -42,12 +43,18 @@ class Equip(models.Model):
 
 class Tank(models.Model):
     title = models.CharField('тип маслобака', max_length=10)
-    location = models.ForeignKey(Equip, on_delete=CASCADE, verbose_name='принадлежность')
+    location = models.ForeignKey(
+        Equip,
+        on_delete=CASCADE,
+        verbose_name='принадлежность',
+        related_name='location'
+    )
     volume = models.IntegerField('емкость маслобака')
     level = models.IntegerField('уровень масла', null=True)
 
     def __str__(self):
         return f'{self.location} {self.title}'
+
 
 class Pump(models.Model):
     OPERATION_CHOICES = (
@@ -55,12 +62,14 @@ class Pump(models.Model):
         ('upload', 'Закачка'),
         ('pumping', 'Перекачка')
     )
-    operation = models.CharField(
+    operation = models.TextField(
         'вид операции',
-        max_length=10,
         choices=OPERATION_CHOICES
     )
-    pump_date = models.DateField('дата перекачки', default=dt.date.today)
+    pump_date = models.DateTimeField(
+        'дата перекачки',
+        default=dt.datetime.today
+    )
     source = models.ForeignKey(
         Tank,
         on_delete=CASCADE,
@@ -68,7 +77,7 @@ class Pump(models.Model):
         related_name='source'
     )
     target = models.ForeignKey(
-       Tank,
+        Tank,
         on_delete=CASCADE,
         verbose_name='куда',
         related_name='target'
@@ -78,5 +87,96 @@ class Pump(models.Model):
         User,
         on_delete=models.SET_NULL,
         related_name='pump_maker',
-        verbose_name='исполнитель'
+        verbose_name='исполнитель',
+        null=True
     )
+
+    class Meta:
+        ordering = ('-pump_date',)
+
+    def __str__(self):
+        return (
+            f'{self.operation} {self.quantity} литров масла '
+            f'из {self.source} в {self.target}'
+        )
+
+
+class Util(models.Model):
+    REASON_CHOICES = (
+        ('day_util', 'суточный расход'),
+        ('failure', 'авария'),
+        ('repair', 'ремонт'),
+        ('else', 'другое')
+    )
+    source = models.ForeignKey(
+        Tank,
+        on_delete=CASCADE,
+        verbose_name='маслобак',
+        related_name='tank'
+    )
+    day_date = models.DateTimeField(
+        'дата регистрации',
+        default=dt.datetime.today
+    )
+    util = models.IntegerField(
+        'расход масла',
+        null=True,
+        default=0
+    )
+    reason = models.TextField(
+        'причина расхода',
+        choices=REASON_CHOICES
+    )
+    description = models.TextField(
+        'примечание',
+        max_length=500,
+        null=True,
+        blank=True,
+        help_text='заполнить при необходимости'
+    )
+
+    class Meta:
+        ordering = ('-day_date',)
+
+    def __str__(self):
+        return (
+            f'{self.tank} | {self.day_date.strftime("%d.%m.%Y")} '
+            f'расход масла составил: {self.util} л.'
+        )
+
+
+class FilterChange(models.Model):
+    title = models.CharField('фильтр', max_length=20)
+    location = models.ForeignKey(
+        Equip,
+        on_delete=CASCADE,
+        verbose_name='оборудование',
+        related_name='filter'
+    )
+    change_date = models.DateTimeField(
+        'дата замены',
+        default=dt.datetime.today
+    )
+    maker = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        related_name='change_maker',
+        verbose_name='исполнитель',
+        null=True
+    )
+    description = models.TextField(
+        'примечание',
+        max_length=500,
+        null=True,
+        blank=True,
+        help_text='Например: тип фильтроэлемента, характер загрязнения'
+    )
+
+    class Meta:
+        ordering = ('-change_date',)
+
+    def __str__(self):
+        return (
+            f'{self.title}, {self.location} | '
+            f'{self.change_date.strftime("%d.%m.%Y")} '
+        )

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Equip, Pump, Storage, Tank
+from .models import Equip, Util, Pump, Storage, Tank, FilterChange
 
 
 class TankAdmin(admin.ModelAdmin):
@@ -11,9 +11,16 @@ class TankAdmin(admin.ModelAdmin):
 
 
 class PumpAdmin(admin.ModelAdmin):
-    list_display = ('operation', 'source', 'target', 'pump_date', 'quantity')
+    list_display = (
+        'operation',
+        'source',
+        'target',
+        'pump_date',
+        'quantity',
+        'maker'
+    )
     search_fields = ('source', 'target', 'pump_date', 'quantity',)
-    list_filter = ('operation',)
+    list_filter = ('operation', 'source', 'target', 'pump_date',)
     empty_value_display = '-пусто-'
 
 
@@ -30,7 +37,29 @@ class StorageAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
+class UtilAdmin(admin.ModelAdmin):
+    list_display = ('source', 'day_date', 'util', 'reason', 'description')
+    search_fields = ('source', 'day_date', 'util', 'reason',)
+    list_filter = ('source', 'day_date', 'util', 'reason',)
+    empty_value_display = '-пусто-'
+
+
+class FilterChangeAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'location',
+        'change_date',
+        'maker',
+        'description'
+    )
+    search_fields = ('title', 'location', 'change_date', 'maker',)
+    list_filter = ('title', 'location', 'change_date', 'maker',)
+    empty_value_display = '-пусто-'
+
+
 admin.site.register(Tank, TankAdmin)
 admin.site.register(Pump, PumpAdmin)
 admin.site.register(Equip, EquipAdmin)
 admin.site.register(Storage, StorageAdmin)
+admin.site.register(Util, UtilAdmin)
+admin.site.register(FilterChange, FilterChangeAdmin)
