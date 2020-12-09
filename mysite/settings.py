@@ -8,10 +8,13 @@ SECRET_KEY = '=c(xedumi!1=v#uarcrx(2ot*s3&aq7lau*82l4&$xzz_&b!n='
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "*",
+]
 
 
 INSTALLED_APPS = [
+    'crispy_forms',
     'users',
     'gpa',
     'oil_stats',
@@ -24,7 +27,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 #    'bootstrap4',
-    'crispy_forms',
     'sorl.thumbnail',
     'django_tables2',
 ]

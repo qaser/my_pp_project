@@ -65,7 +65,7 @@ def add_pump(request):
 def add_util(request):
     form = UtilForm(request.POST or None)
     if form.is_valid():
-        source_id = form.cleaned_data['tank'].id
+        source_id = form.cleaned_data['source'].id
         util = form.cleaned_data['util']
         source_tank = get_object_or_404(Tank, id=source_id)
         # вычитаю из источника объем утечки масла
