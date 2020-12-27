@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 <div class="form-card">
-    <form method="post" action="{% url 'add_filterchange' %}">
+    <form method="post" action="{% url 'add_strainer_change' %}">
       {% csrf_token %}
       <h5 class="form-title">Добавить запись о замене фильтроэлемента:</h5>
       <div class="form-card-body">

@@ -31,10 +31,10 @@
         Последние операции по замене фильтроэлементов. 
         <a href="{% url 'pump_site' %}"> Вся статистика</a>
       </h3>
-      {% render_table filter_table %}
+      {% render_table strainer_table %}
     </div>
 
-    {% include "oil_stats/add_filterchange.html" with form=filter_form %}
+    {% include "oil_stats/add_strainer_change.html" with form=strainer_form %}
   
     <div class="table-card">
       <h3 class="table-title">

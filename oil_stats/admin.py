@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Equip, Util, Pump, Storage, Tank, FilterChange
+from .models import Equip, Util, Pump, Storage, Tank, StrainerChange
 
 
 class TankAdmin(admin.ModelAdmin):
@@ -44,7 +44,7 @@ class UtilAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-class FilterChangeAdmin(admin.ModelAdmin):
+class StrainerChangeAdmin(admin.ModelAdmin):
     list_display = (
         'title',
         'location',
@@ -62,4 +62,4 @@ admin.site.register(Pump, PumpAdmin)
 admin.site.register(Equip, EquipAdmin)
 admin.site.register(Storage, StorageAdmin)
 admin.site.register(Util, UtilAdmin)
-admin.site.register(FilterChange, FilterChangeAdmin)
+admin.site.register(StrainerChange, StrainerChangeAdmin)

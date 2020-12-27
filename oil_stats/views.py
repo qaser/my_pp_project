@@ -1,11 +1,16 @@
-from django.contrib.auth.decorators import login_required
+#from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.cache import cache_page
+#from django.views.decorators.cache import cache_page
+from django_tables2 import SingleTableMixin, LazyPaginator
+from django_filters.views import FilterView
 
-from .forms import UtilForm, PumpForm, FilterChangeForm
-from .models import Equip, Util, Pump, Storage, Tank, FilterChange, User
-from .tables import PumpTable, UtilTable, FilterChangeTable
+
+from .filters import PumpFilter
+from .forms import UtilForm, PumpForm, StrainerChangeForm
+from .models import Equip, Util, Pump, Storage, Tank, StrainerChange
+from .tables import PumpTable, UtilTable, StrainerChangeTable
+
 
 
 # function for split many posts on pages
@@ -19,27 +24,20 @@ def split_on_page(request, pump_page):
 # функция для отображения начального экрана системы ГСМ
 def index(request):
     pump_table = PumpTable(Pump.objects.all()[:5])
-    filter_table = FilterChangeTable(FilterChange.objects.all()[:5])
+    strainer_table = StrainerChangeTable(StrainerChange.objects.all()[:5])
     util_table = UtilTable(Util.objects.all()[:5])
     pump_form = PumpForm()
     util_form = UtilForm()
-    filter_form = FilterChangeForm()
+    strainer_form = StrainerChangeForm()
     return render(request, 'oil_stats/oil_index.html', {
             'pump_table': pump_table,
-            'filter_table': filter_table,
+            'strainer_table': strainer_table,
             'util_table': util_table,
             'pump_form': pump_form,
             'util_form': util_form,
-            'filter_form': filter_form
+            'strainer_form': strainer_form
         }
     )
-
-
-def pump_list(request):
-    table = PumpTable(Pump.objects.all())
-    return render(request, "oil_stats/pump_list.html", {
-        'table': table
-    })
 
 
 # @login_required
@@ -75,8 +73,24 @@ def add_util(request):
     return redirect('oil_index')
 
 
-def add_filterchange(request):
-    form = FilterChangeForm(request.POST or None)
+def add_strainer_change(request):
+    form = StrainerChangeForm(request.POST or None)
     if form.is_valid():
         form.save()
     return redirect('oil_index')
+
+
+class PumpListView(SingleTableMixin, FilterView):
+    table_class = PumpTable
+    paginator_class = LazyPaginator
+    template_name = 'oil_stats/pump_list.html'
+    filterset_class = PumpFilter
+
+'''
+def pump_list(request):
+    table = PumpTable(Pump.objects.all())
+    table.paginate(page=request.GET.get('page', 1), per_page=10)
+    return render(request, 'oil_stats/pump_list.html', {
+        'table': table,
+    })
+'''

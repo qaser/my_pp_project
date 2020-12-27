@@ -1,9 +1,10 @@
 import datetime as dt
+from django.conf import settings
 
 from django.db import models
+from django.core.validators import MinValueValidator
 from django.db.models.deletion import CASCADE
 from gpa.models import Gpa
-from users.models import User
 
 
 class Storage(models.Model):
@@ -82,9 +83,12 @@ class Pump(models.Model):
         verbose_name='куда',
         related_name='target'
     )
-    quantity = models.IntegerField('количество')
+    quantity = models.IntegerField(
+        'количество',
+        validators=[MinValueValidator(1)]
+    )
     maker = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         related_name='pump_maker',
         verbose_name='исполнитель',
@@ -121,7 +125,7 @@ class Util(models.Model):
     util = models.IntegerField(
         'расход масла',
         null=True,
-        default=0
+        validators=[MinValueValidator(1)]
     )
     reason = models.TextField(
         'причина расхода',
@@ -145,7 +149,7 @@ class Util(models.Model):
         )
 
 
-class FilterChange(models.Model):
+class StrainerChange(models.Model):
     title = models.CharField('фильтр', max_length=20)
     location = models.ForeignKey(
         Equip,
@@ -158,7 +162,7 @@ class FilterChange(models.Model):
         default=dt.datetime.today
     )
     maker = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         related_name='change_maker',
         verbose_name='исполнитель',
