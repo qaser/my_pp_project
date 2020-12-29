@@ -14,6 +14,7 @@ ALLOWED_HOSTS = [
 
 
 INSTALLED_APPS = [
+    'api',
     'crispy_forms',
     'users',
     'gpa',
