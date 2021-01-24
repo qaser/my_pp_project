@@ -1,3 +1,5 @@
+# TODO при добавлении времени наработки модели ГПА использовать
+# значения по умолчанию привязанные к нагнетателю
 import datetime as dt
 
 from django.db import models
@@ -8,9 +10,17 @@ class Engine(models.Model):
     title = models.CharField('марка двигателя', max_length=50)
     number_gg = models.CharField('заводской номер ГГ', max_length=20)
     number_st = models.CharField('заводской номер СТ', max_length=20)
-    life_time = models.IntegerField('наработка с начала эксплуатации')
+    life_time = models.IntegerField(
+        'наработка с начала эксплуатации',
+        default=0
+    )
     to_time = models.IntegerField('наработка после ТО')
     repair_time = models.IntegerField('наработка после ремонта')
+
+    class Meta:
+        verbose_name = 'двигатель'
+        verbose_name_plural = 'двигатели'
+        ordering = ('number_gg',)
 
     def __str__(self):
         return f'{self.title} - зав. номер: {self.number_gg}'
@@ -21,6 +31,11 @@ class Compressor(models.Model):
     number = models.CharField('заводской номер', max_length=20)
     spch_type = models.CharField('тип СПЧ', max_length=10)
     life_time = models.IntegerField('наработка с начала эксплуатации')
+
+    class Meta:
+        verbose_name = 'нагнетатель'
+        verbose_name_plural = 'нагнетатели'
+        ordering = ('number',)
 
     def __str__(self):
         return f'{self.title} - зав. номер: {self.number}'
@@ -38,13 +53,13 @@ class Gpa(models.Model):
         Engine,
         on_delete=CASCADE,
         verbose_name='тип силовой установки',
-        related_name='engine',
+        related_name='gpa',
     )
     compressor = models.ForeignKey(
         Compressor,
         on_delete=CASCADE,
         verbose_name='тип нагнетателя',
-        related_name='compressor',
+        related_name='gpa',
     )
     life_time = models.IntegerField('наработка с начала эксплуатации')
     kr_time = models.IntegerField('наработка после кап. ремонта')
@@ -53,7 +68,8 @@ class Gpa(models.Model):
 
 
     class Meta:
-        verbose_name_plural = 'gpa'
+        verbose_name = 'ГПА'
+        verbose_name_plural = 'ГПА'
         ordering = ('title',)
 
     def __str__(self):
@@ -76,3 +92,11 @@ class Flaw(models.Model):
         'дата обнаружения',
         default=dt.date.today,
     )
+
+    class Meta:
+        verbose_name = 'неисправность'
+        verbose_name_plural = 'неисправности'
+        ordering = ('gpa',)
+
+    def __str__(self):
+        return f'{self.gpa} {self.text}'
