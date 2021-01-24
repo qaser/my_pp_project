@@ -4,7 +4,7 @@ import os
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 
-SECRET_KEY = '=c(xedumi!1=v#uarcrx(2ot*s3&aq7lau*82l4&$xzz_&b!n='
+SECRET_KEY = 'SECRET_KEY'
 
 DEBUG = True
 
