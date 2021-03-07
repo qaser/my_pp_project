@@ -6,8 +6,9 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>{% block title %}{% endblock %} | MySite</title>
+    <title>{% block title %}{% endblock %} | MODULE</title>
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}">
+
     {% block style %}{% endblock %}
 
   </head>
@@ -18,5 +19,4 @@
     {% block content %}{% endblock %}
     {% include 'mysite/base_ext/footer.html' %}
   </body>
-  <script type="text/javascript" src={% static "oil_stats/js/script.js" %}></script>
 </html>

@@ -25,7 +25,8 @@ class Equip(models.Model):
         verbose_name='ГПА',
         related_name='gpa_equip',
         blank=True,
-        null=True
+        null=True,
+        db_index=True
     )
     storage = models.ForeignKey(
         Storage,
@@ -33,7 +34,7 @@ class Equip(models.Model):
         verbose_name='БПМ или склад ГСМ',
         related_name='storage_equip',
         blank=True,
-        null=True
+        null=True,
     )
 
     def __str__(self):
@@ -48,7 +49,8 @@ class Tank(models.Model):
         Equip,
         on_delete=CASCADE,
         verbose_name='принадлежность',
-        related_name='location'
+        related_name='location',
+        db_index=True
     )
     volume = models.IntegerField('емкость маслобака')
     level = models.IntegerField('уровень масла', null=True)
@@ -63,25 +65,28 @@ class Pump(models.Model):
         ('upload', 'Закачка'),
         ('pumping', 'Перекачка')
     )
-    operation = models.TextField(
-        'вид операции',
-        choices=OPERATION_CHOICES
-    )
     pump_date = models.DateTimeField(
         'дата перекачки',
         default=dt.datetime.today
+    )
+    operation = models.TextField(
+        'вид операции',
+        choices=OPERATION_CHOICES,
+        db_index=True
     )
     source = models.ForeignKey(
         Tank,
         on_delete=CASCADE,
         verbose_name='откуда',
-        related_name='source'
+        related_name='source',
+        db_index=True
     )
     target = models.ForeignKey(
         Tank,
         on_delete=CASCADE,
         verbose_name='куда',
-        related_name='target'
+        related_name='target',
+        db_index=True
     )
     quantity = models.IntegerField(
         'количество',
@@ -112,15 +117,15 @@ class Util(models.Model):
         ('repair', 'ремонт'),
         ('else', 'другое')
     )
+    day_date = models.DateTimeField(
+        'дата регистрации',
+        default=dt.datetime.today
+    )
     source = models.ForeignKey(
         Tank,
         on_delete=CASCADE,
         verbose_name='маслобак',
         related_name='tank'
-    )
-    day_date = models.DateTimeField(
-        'дата регистрации',
-        default=dt.datetime.today
     )
     util = models.IntegerField(
         'расход масла',
@@ -150,16 +155,16 @@ class Util(models.Model):
 
 
 class StrainerChange(models.Model):
+    change_date = models.DateTimeField(
+        'дата замены',
+        default=dt.datetime.today
+    )
     title = models.CharField('фильтр', max_length=20)
     location = models.ForeignKey(
         Equip,
         on_delete=CASCADE,
         verbose_name='оборудование',
         related_name='filter'
-    )
-    change_date = models.DateTimeField(
-        'дата замены',
-        default=dt.datetime.today
     )
     maker = models.ForeignKey(
         settings.AUTH_USER_MODEL,

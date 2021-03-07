@@ -1,8 +1,24 @@
-<nav class="navbar navbar-light" style="background-color: #87CEFA;">
-  <a class="navbar-brand" href="{% url 'oil_index' %}"><span style="color:rgb(255, 81, 0)">My</span>site</a>
-  <nav class="my-2 my-md-0 mr-md-3">
+<div class="navbar">
+  <a href="#home" class="active">Главная</a>
+  <a href="#contact">Модули</a>
+  <a href="#contact">Пользователь: {{ request.user.username }}</a>
+  <a href="#about">Выйти</a>
+</div>
 
-      Пользователь: {{ user.username }}
 
-  </nav>
-</nav>
+{% comment %} <nav class="navbar" style="background-color: #87CEFA;">
+  <a class="navbar-brand" href="{% url 'oil_index' %}"><span style="color:rgb(255, 81, 0)">МИР</span>станция</a>
+  <div class="navigator"> {% endcomment %}
+
+    {% comment %} {% if request.user.is_authenticated %} {% endcomment %}
+      {% comment %} Пользователь: {{ request.user.username }} {% endcomment %}
+      {% comment %} <a class="p-2 text-dark" href="{% url 'new_post' %}">Новая запись</a>
+      <a class="p-2 text-dark" href="{% url 'password_change' %}">Изменить пароль</a>
+      <a class="p-2 text-dark" href="{% url 'logout' %}">Выйти</a>
+    {% else %}
+      <a class="p-2 text-dark" href="{% url 'login' %}">Войти</a>
+      <a class="p-2 text-dark" href="{% url 'signup' %}">Регистрация</a>
+    {% endif %} {% endcomment %}
+    
+  {% comment %} </div>
+</nav> {% endcomment %}

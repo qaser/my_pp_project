@@ -1,6 +1,19 @@
+{% extends 'mysite/base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 
+{% block title %}Замена фильтроэлемента | Форма добавления записи{% endblock %}
+
+{% block style %}
+  <link href="{% static 'oil_stats/css/styles.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+  <div class="jumbotron">
+    <h1>Модуль учёта ГСМ</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
 <div class="form-card">
     <form method="post" action="{% url 'add_strainer_change' %}">
       {% csrf_token %}
@@ -13,3 +26,4 @@
       </div>
     </form>
 </div>
+{% endblock %}

@@ -54,12 +54,14 @@ class Gpa(models.Model):
         on_delete=CASCADE,
         verbose_name='тип силовой установки',
         related_name='gpa',
+        db_index=True,
     )
     compressor = models.ForeignKey(
         Compressor,
         on_delete=CASCADE,
         verbose_name='тип нагнетателя',
         related_name='gpa',
+        db_index=True,
     )
     life_time = models.IntegerField('наработка с начала эксплуатации')
     kr_time = models.IntegerField('наработка после кап. ремонта')
@@ -81,7 +83,8 @@ class Flaw(models.Model):
         Gpa,
         on_delete=CASCADE,
         verbose_name='ГПА',
-        related_name='gpa'
+        related_name='gpa',
+        db_index=True,
     )
     text = models.CharField(
         'замечание',
