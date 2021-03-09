@@ -1,19 +1,10 @@
-{% extends "mysite/base.html" %}
+{% extends "oil_stats/oil_index.html" %}
 {% load static %}
 {% load cache %}
+
 {% load render_table from django_tables2 %}
 
-{% block title %}List of pumps{% endblock %}
-
-{% block style %}
-    <link href="{% static 'oil_stats/css/styles.css' %}" rel="stylesheet">
-{% endblock %}
-
-{% block header %}
-  <div class="jumbotron">
-    <h1>Модуль учёта ГСМ</h1>
-  </div>
-{% endblock %}
+{% block title %}Данные по перекачке масла{% endblock %}
 
 {% block content %}
 
@@ -23,7 +14,7 @@
                 <table class="filter">
                     {{ filter.form.as_table }}
                 </table>
-                <button id="filter_submit_button" type="submit">Применить</button>
+                <button type="submit" class="form-button">Применить</button>
             </div>
     </form>
   </div>
@@ -34,7 +25,9 @@
   </div>
 
   <div>
-    {{ graph|safe  }}
+    <h3 class="table-title">
+      <a href="{% url 'graphs' %}">Посмотреть графики</a>
+    </h3>
   </div>
 
 {% endblock %}

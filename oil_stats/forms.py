@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.admin.widgets import AdminDateWidget
 
 from .models import Pump, Util, StrainerChange
 
@@ -8,6 +9,7 @@ class PumpForm(forms.ModelForm):
     class Meta:
         model = Pump
         fields = ['operation', 'pump_date', 'source', 'target', 'quantity', 'maker']
+        # widgets = {'pump_date': AdminDateWidget()}
 
 
 # TODO добавить валидацию для значения util <= 0

@@ -1,17 +1,19 @@
 #from django.contrib.auth.decorators import login_required
+from django.views.generic.base import TemplateView
+from oil_stats.charts import PumpBar
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import cache_page
 from django_tables2 import SingleTableMixin, LazyPaginator
 from django_filters.views import FilterView
 import pygal
+from pygal.style import RedBlueStyle
 
 
-from .filters import PumpFilter
+from .filters import PumpFilter, UtilFilter, StrainerFilter
 from .forms import UtilForm, PumpForm, StrainerChangeForm
-from .models import Equip, Util, Pump, Storage, Tank, StrainerChange
-from .tables import PumpTable, UtilTable, StrainerChangeTable
-
+from .models import Util, Pump, Tank, StrainerChange
+from .tables import PumpTable, PumpTableFull, StrainerChangeTableFull, UtilTable, StrainerChangeTable, UtilTableFull
 
 
 # function for split many posts on pages
@@ -59,6 +61,7 @@ def add_pump(request):
         return redirect('oil_index')
     return render(request, 'oil_stats/add_pump.html', {'form': form})
 
+
 def add_util(request):
     form = UtilForm(request.POST or None)
     if form.is_valid():
@@ -82,19 +85,37 @@ def add_strainer_change(request):
 
 
 class PumpListView(SingleTableMixin, FilterView):
-    table_class = PumpTable
+    table_class = PumpTableFull
     paginator_class = LazyPaginator
     template_name = 'oil_stats/pump_list.html'
     filterset_class = PumpFilter
 
 
-def pump_list(request):
-    table = PumpTable(Pump.objects.all())
-    data = [1, 4, 6, 8, 34, 68]
-    graph = pygal.Bar().add('34567', )
-    graph.add('some', data)
-    table.paginate(page=request.GET.get('page', 1), per_page=10)
-    return render(request, 'oil_stats/pump_list.html', {
-        'table': table,
-        'graph': graph.render(),
-    })
+class UtilListView(SingleTableMixin, FilterView):
+    table_class = UtilTableFull
+    paginator_class = LazyPaginator
+    template_name = 'oil_stats/util_list.html'
+    filterset_class = UtilFilter
+
+
+class StrainerListView(SingleTableMixin, FilterView):
+    table_class = StrainerChangeTableFull
+    paginator_class = LazyPaginator
+    template_name = 'oil_stats/strainer_list.html'
+    filterset_class = StrainerFilter
+
+
+class PumpGraphView(TemplateView):
+    template_name = 'oil_stats/graph.html'
+    filterset_class = PumpFilter
+
+    def get_context_data(self, **kwargs):
+        context = super(PumpGraphView, self).get_context_data(**kwargs)
+        cht_stocks = PumpBar(
+            height=600,
+            width=800,
+            explicit_size=True,
+            style=RedBlueStyle
+        )
+        context['cht_stocks'] = cht_stocks.generate()
+        return context

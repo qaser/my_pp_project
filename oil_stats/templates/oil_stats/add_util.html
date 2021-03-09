@@ -1,17 +1,7 @@
-{% extends 'mysite/base.html' %}
+{% extends "oil_stats/oil_index.html" %}
 {% load static %}
 
 {% block title %}Расход масла | Форма добавления записи{% endblock %}
-
-{% block style %}
-  <link href="{% static 'oil_stats/css/styles.css' %}" rel="stylesheet">
-{% endblock %}
-
-{% block header %}
-  <div class="jumbotron">
-    <h1>Модуль учёта ГСМ</h1>
-  </div>
-{% endblock %}
 
 {% block content %}
 <div class="form-card">
