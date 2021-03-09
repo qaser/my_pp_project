@@ -4,6 +4,8 @@ venv/
 .venv
 .venv/
 
+.envy
+
 sent_emails/
 .sent_emails/
 .sent_emails/*

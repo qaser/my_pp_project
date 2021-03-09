@@ -1,0 +1,27 @@
+{% extends "oil_stats/oil_index.html" %}
+{% load static %}
+{% load cache %}
+
+{% load render_table from django_tables2 %}
+
+{% block title %}Данные по расходу масла{% endblock %}
+
+{% block content %}
+
+  <div class="filter">
+    <form id="filter_submit" class="filter">
+            <div class="filter">
+                <table class="filter">
+                    {{ filter.form.as_table }}
+                </table>
+                <button type="submit" class="form-button">Применить</button>
+            </div>
+    </form>
+  </div>
+
+  <div class="table-card">
+    <h3 class="table-title">Данные по расходу масла</h3>
+    {% render_table table %}
+  </div>
+
+{% endblock %}
